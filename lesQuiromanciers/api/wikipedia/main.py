@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from SPARQLWrapper import SPARQLWrapper, JSON
 import requests
 from bs4 import BeautifulSoup
 import wikipedia
@@ -19,6 +20,38 @@ def searchPages(search: str) -> bool:
         return True
     else:
         return False
+
+
+def get_person_name():
+    sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
+    sparql.setQuery(
+        """
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+    PREFIX p: <http://www.wikidata.org/prop/> 
+    PREFIX psv: <http://www.wikidata.org/prop/statement/value/> 
+    PREFIX bd: <http://www.bigdata.com/rdf#> 
+    PREFIX wikibase: <http://wikiba.se/ontology#> 
+    PREFIX wd: <http://www.wikidata.org/entity/> 
+    PREFIX wdt: <http://www.wikidata.org/prop/direct/> 
+
+    select 
+    ?personLabel
+    where {
+        ?person wdt:P31 wd:Q5 . 
+        ?person wdt:P106 wd:Q33999
+    
+    # Doc : https://www.mediawiki.org/wiki/Wikidata_query_service/User_Manual#Label_service
+    # SELECT ?variableLabel ?variableAltLabel  ?variableDescription
+    SERVICE wikibase:label {
+        bd:serviceParam wikibase:language "fr,en" .
+    }
+    } LIMIT 3"""
+    )
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    return results
+
+    # print(result["label"]["value"])
 
 
 # def getPage(pageId):
@@ -52,13 +85,20 @@ if __name__ == "__main__":
     # #pageId = 21492751
     # searchPages(search)
     # #getPage(pageId)
+    names = []
+    name_people = get_person_name()
 
+    for result in name_people["results"]["bindings"]:
+        names.append(result["personLabel"]["value"])
+
+    print(names)
     search = "Nelson Mandela"
-    df = pd.DataFrame(columns=["name", "biographie"])
-    if searchPages(search):
-        df = df.append(
-            {"name": search, "biographie": wikipedia.page(search).content},
-            ignore_index=True,
-        )
 
+    df = pd.DataFrame(columns=["name", "biographie"])
+    for name in names:
+        if searchPages(name):
+            df = df.append(
+                {"name": name, "biographie": wikipedia.page(name).content},
+                ignore_index=True,
+            )
     print(df)

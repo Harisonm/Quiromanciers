@@ -5,7 +5,7 @@ import json
 
 
 def main():
-    
+
     perms: ["manage_pages", "publish_pages"]
     with open("api/fb/src/config.json", "r") as f:
         distros_dict = json.load(f)
