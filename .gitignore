@@ -1,0 +1,19 @@
+# Vs Code
+.vscode/*
+
+# Mac 
+*/.IDEA
+
+# Python
+*/__pycache__
+
+# Configuration 
+*/config.json
+api/fb/src/config.json
+
+# Dev container
+.devcontainer/*
+
+# Log notebook
+.ipynb_checkpoints/*
+
