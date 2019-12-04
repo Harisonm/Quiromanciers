@@ -2,7 +2,8 @@ import pandas as pd
 import requests
 import facebook
 
-class FbManager():
+
+class FbManager:
     def __init__(self):
         pass
 
