@@ -31,51 +31,9 @@ class WikiFactory(object):
             return False
 
     def __get_person_name(self):
-        sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
-        sparql.setQuery(
-            """
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
-        PREFIX p: <http://www.wikidata.org/prop/> 
-        PREFIX psv: <http://www.wikidata.org/prop/statement/value/> 
-        PREFIX bd: <http://www.bigdata.com/rdf#> 
-        PREFIX wikibase: <http://wikiba.se/ontology#> 
-        PREFIX wd: <http://www.wikidata.org/entity/> 
-        PREFIX wdt: <http://www.wikidata.org/prop/direct/> 
-
-        select 
-        ?personLabel
-        where {
-            ?person wdt:P31 wd:Q5 . 
-            # ?person wdt:P106 wd:Q33999
-        
-        # Doc : https://www.mediawiki.org/wiki/Wikidata_query_service/User_Manual#Label_service
-        # SELECT ?variableLabel ?variableAltLabel  ?variableDescription
-        SERVICE wikibase:label {
-            bd:serviceParam wikibase:language "fr,en" .
-        }
-        } LIMIT 10000"""
-        )
-        sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
-        return results
-
-    def build_biographie(self):
-        names = []
-        df = pd.DataFrame(columns=["name", "biographie"])
-
-        name_people = self.__get_person_name()
-
-        for result in name_people["results"]["bindings"]:
-            names.append(result["personLabel"]["value"])
-        print(names)
         try:
-            for name in names:
-                if self.__searchPages(name):
-                    df = df.append(
-                        {"name": name, "biographie": self.__get_biographie(name)},
-                        ignore_index=True,
-                    )
-            print(df)
+            df = pd.read_csv("data/people.csv", header=None, encoding="utf-8", sep=";")
+            return df
         except:
             print_exc()
 
@@ -83,6 +41,32 @@ class WikiFactory(object):
     # TO DO : write this with multithreading using concurrent.futures.ProcessPoolExecutor with executor.submit
     def __get_biographie(name):
         try:
-            wikipedia.page(name).content
+            return wikipedia.page(name).content
         except:
             print_exc()
+
+    def build_biographie(self):
+
+        biographie_df = pd.DataFrame(columns=["name", "biographie"])
+        name_people = self.__get_person_name()
+
+        for index, row in name_people.iterrows():
+            try:
+                if self.__searchPages(row.values):
+                    biographie_df = biographie_df.append(
+                        {
+                            "name": row.values,
+                            "biographie": self.__get_biographie(row.values),
+                        },
+                        ignore_index=True,
+                    )
+                    print(biographie_df)
+            except:
+                print_exc()
+
+        biographie_df.to_csv(
+            path_or_buf="data/ biographie_df.csv",
+            encoding="utf-8",
+            sep=";",
+            index=False,
+        )
