@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 from SPARQLWrapper import SPARQLWrapper, JSON
-import requests
 from bs4 import BeautifulSoup
+from traceback import print_exc
+import requests
 import wikipedia
 import pandas as pd
 
@@ -52,25 +53,36 @@ class WikiFactory(object):
         SERVICE wikibase:label {
             bd:serviceParam wikibase:language "fr,en" .
         }
-        } LIMIT 10"""
+        } LIMIT 10000"""
         )
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
         return results
 
-    def get_biographie(self):
+    def build_biographie(self):
         names = []
+        df = pd.DataFrame(columns=["name", "biographie"])
+
         name_people = self.__get_person_name()
 
         for result in name_people["results"]["bindings"]:
             names.append(result["personLabel"]["value"])
         print(names)
+        try:
+            for name in names:
+                if self.__searchPages(name):
+                    df = df.append(
+                        {"name": name, "biographie": self.__get_biographie(name)},
+                        ignore_index=True,
+                    )
+            print(df)
+        except:
+            print_exc()
 
-        df = pd.DataFrame(columns=["name", "biographie"])
-        for name in names:
-            if self.__searchPages(name):
-                df = df.append(
-                    {"name": name, "biographie": wikipedia.page(name).content},
-                    ignore_index=True,
-                )
-        print(df)
+    @staticmethod
+    # TO DO : write this with multithreading using concurrent.futures.ProcessPoolExecutor with executor.submit
+    def __get_biographie(name):
+        try:
+            wikipedia.page(name).content
+        except:
+            print_exc()
