@@ -64,7 +64,7 @@ class WikiFactory(object):
                 print_exc()
 
         biographie_df.to_csv(
-            path_or_buf="data/ biographie_df.csv",
+            path_or_buf="data/biographie_df.csv",
             encoding="utf-8",
             sep=";",
             index=False,
