@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from SPARQLWrapper import SPARQLWrapper, JSON
 from bs4 import BeautifulSoup
 from traceback import print_exc
 import requests
