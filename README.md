@@ -1,5 +1,6 @@
 # Run apps from python
 
+## Run project from root path
 ```bash
 python -m lesQuiromanciers.main
 ```
