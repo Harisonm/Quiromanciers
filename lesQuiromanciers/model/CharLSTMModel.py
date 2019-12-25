@@ -10,7 +10,7 @@ from tensorflow.python import keras
 
 
 class charLSTMmodel():
-    
+        
     def fit(self,text,epochs=100):
         self._load(text)
         self._build()
