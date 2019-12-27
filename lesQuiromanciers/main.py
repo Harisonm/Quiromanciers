@@ -9,11 +9,9 @@ if __name__ == "__main__":
 
     # One shot -> create csv
     # test = WikiFactory().build_biographie()
-    df_biographie = pd.read_csv(filename, encoding="utf-8", sep=";")
-    print(df_biographie[df_biographie['name'] == "Justin Bieber"].biographie)
-
-    # clstm = GenerationBioModel()
-    # clstm.fit(filename, epochs=25)
+    biographie_df = pd.read_csv(filename, encoding="utf-8", sep=";", usecols = ['name', 'biographie'])
+    clstm = GenerationBioModel()
+    clstm.fit(biographie_df, epochs=1)
 
 
     # clstm.generate("indubitably ")

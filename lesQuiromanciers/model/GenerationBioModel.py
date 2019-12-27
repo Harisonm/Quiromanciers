@@ -2,7 +2,7 @@ from tensorflow.python.keras import preprocessing
 from tensorflow.python.keras import layers
 from tensorflow.python.keras import Sequential, callbacks, utils
 from tensorflow.python.keras.activations import linear, tanh
-from tensorflow.python.keras.layers import Dense, Activation, LSTM
+from tensorflow.python.keras.layers import Dense, Activation, LSTM, Dropout
 from tensorflow.python.keras.losses import mse
 from tensorflow.python.keras.optimizers import SGD, Adam,RMSprop
 from tensorflow.python.keras.models import Sequential
@@ -13,6 +13,7 @@ import random
 import numpy as np
 import pandas as pd
 import sys
+import re
 
 
 
@@ -21,49 +22,55 @@ class GenerationBioModel:
     def __init__(self):
         self.X = None
         self.Y = None
-        self.global_bio = None
-        self.maxlen = None
-        self.step = None
-        self.biographie_sort = None
-        self.indices_char = None
+        self.biographie = None
+        self.chars = None
+        self.maxlen = 40
+        self.step = 3
         self.char_indices = None
+        self.indices_char = None
         
-    def fit(self,text,epochs=100):
-        self._load(text)
+        
+    def fit(self,dataframe,epochs=100):
+        self._load(dataframe)
         self._build()
         generate_text = LambdaCallback(on_epoch_end=self.on_epoch_end)
         self._train(generate_text,epochs)
         
-    def _load(self, filename):
+    def _load(self, dataframe):
         sentences = []
         next_chars = []
         text = []
-        biographie_df = pd.read_csv(filename, encoding="utf-8", sep=";", usecols = ['name', 'biographie'])
-        # df_biographie[df_biographie['name'] == "Justin Bieber"].biographie
         
-        for i in range(0,len(biographie_df['biographie'])):
-            text += ''.join([''.join(sentence) for sentence in biographie_df['biographie'][i]])
-        sample_size = int(len(text) * 0.2)
-        
-        self.global_bio = biographie_df.biographie
-        self.global_bio = self.global_bio[:sample_size]
-        self.global_bio = ''.join(map(str, self.global_bio)).lower()
-        self.biographie_sort = sorted(list(set(self.global_bio)))
-        self.char_indices = dict((c, i) for i, c in enumerate(self.biographie_sort))
-        self.indices_char = dict((i, c) for i, c in enumerate(self.biographie_sort))
-        self.maxlen = 40
-        self.step = 3
+        # biographie = df_biographie.biographie
+        self.biographie = dataframe.biographie.apply(lambda x: self.clean_data(x))
 
-        for i in range(0, len(self.global_bio) - self.maxlen, self.step):
-            sentences.append(self.global_bio[i: i + self.maxlen])
-            next_chars.append(self.global_bio[i + self.maxlen])
-            
-        self.X = np.zeros((len(sentences), self.maxlen, len(self.biographie_sort)), dtype=np.bool)
-        self.Y = np.zeros((len(sentences), len(self.biographie_sort)), dtype=np.bool)
+        n_messages = len(self.biographie)
+        n_chars = len(' '.join(map(str, self.biographie)))
+
+        print("DataFrame biographie for %d messages" % n_messages)
+        print("Their messages add up to %d characters" % n_chars)
+        
+        sample_size = int(len(self.biographie) * 0.2)
+        self.biographie = self.biographie[:sample_size]
+        self.biographie = ''.join(map(str, self.biographie)).lower()
+        
+        self.chars = sorted(list(set(self.biographie)))
+        print('Count of unique characters (i.e., features):', len(self.chars))
+        self.char_indices = dict((c, i) for i, c in enumerate(self.chars))
+        self.indices_char = dict((i, c) for i, c in enumerate(self.chars))
+        
+        for i in range(0, len(self.biographie) - self.maxlen, self.step):
+            sentences.append(self.biographie[i: i + self.maxlen])
+            next_chars.append(self.biographie[i + self.maxlen])
+        print('Number of sequences:', len(sentences), "\n")
+        
+        self.X = np.zeros((len(sentences), self.maxlen, len(self.chars)), dtype=np.bool)
+        self.Y = np.zeros((len(sentences), len(self.chars)), dtype=np.bool)
         for i, sentence in enumerate(sentences):
             for t, char in enumerate(sentence):
                 self.X[i, t, self.char_indices[char]] = 1
             self.Y[i, self.char_indices[next_chars[i]]] = 1
+        
         
         
     def _tokenise(self,text):
@@ -73,12 +80,18 @@ class GenerationBioModel:
 
     def _build(self):
         self.model = Sequential()
-        self.model.add(LSTM(128, input_shape=(self.maxlen, len(self.biographie_sort))))
-        self.model.add(Dense(len(self.biographie_sort)))
+        #model.add(Embedding(len(y), 10, input_length=len(x)))
+        self.model.add(LSTM(128, input_shape=(self.maxlen, len(self.chars)),return_sequences=True))
+        self.model.add(LSTM(128))
+        self.model.add(Dense(len(self.chars)))
+        self.model.add(Dropout(0.2))
         self.model.add(Activation('softmax'))
+        
+        self.model.summary()
+        
         optimizer = RMSprop(lr=0.01)
-        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
-        print(self.model.summary())
+        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,metrics=['accuracy'])
+        
 
     def _train(self,generate_text,epochs):
         # define the checkpoint
@@ -89,6 +102,11 @@ class GenerationBioModel:
                                     save_best_only=True, 
                                     mode='min')
 
+        # serialize model to YAML
+        model_yaml = self.model.to_yaml()
+        with open("model.yaml", "w") as yaml_file:
+            yaml_file.write(model_yaml)
+            
         # fit model using our gpu
         with tf.device('/cpu:0'):
             self.model.fit(self.X, self.Y,
@@ -97,6 +115,11 @@ class GenerationBioModel:
                     verbose=2,
                     callbacks=[generate_text, checkpoint])
     
+    @staticmethod
+    def clean_data(data):
+      data = str(data)
+      return re.sub(r'\(.*?\)', '', data)
+  
     @staticmethod
     def sample(preds, temperature=1.0):
         # helper function to sample an index from a probability array
@@ -107,6 +130,7 @@ class GenerationBioModel:
         probas = np.random.multinomial(1, preds, 1)
         return np.argmax(probas)
 
+    
     def on_epoch_end(self,epoch, logs):
         # Function invoked for specified epochs. Prints generated text.
         # Using epoch+1 to be consistent with the training epochs printed by Keras
@@ -114,24 +138,25 @@ class GenerationBioModel:
             print()
             print('----- Generating text after Epoch: %d' % epoch)
 
-            start_index = random.randint(0, len(self.global_bio) - self.maxlen - 1)
+            start_index = random.randint(0, len(self.biographie) - self.maxlen - 1)
             for diversity in [0.2, 0.5, 1.0, 1.2]:
                 print('----- diversity:', diversity)
 
                 generated = ''
-                sentence = self.global_bio[start_index: start_index + self.maxlen]
+                sentence = self.biographie[start_index: start_index + self.maxlen]
                 generated += sentence
                 print('----- Generating with seed: "' + sentence + '"')
                 sys.stdout.write(generated)
 
                 for i in range(400):
-                    x_pred = np.zeros((1, self.maxlen, len(self.biographie_sort)))
+                    x_pred = np.zeros((1, self.maxlen, len(self.chars)))
                     for t, char in enumerate(sentence):
-                        x_pred[0, t, self.indices_char[char]] = 1.
+                        x_pred[0, t, self.char_indices[char]] = 1.
 
-                    preds = model.predict(x_pred, verbose=0)[0]
+                    preds = self.model.predict(x_pred, verbose=0)[0]
                     next_index = sample(preds, diversity)
-                    next_char = self.indices_char[next_index]
+                    next_char = indices_char[next_index]
+
                     generated += next_char
                     sentence = sentence[1:] + next_char
 
