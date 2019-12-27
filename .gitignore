@@ -26,3 +26,8 @@ api/fb/src/config.json
 lesQuiromanciers/model/__pycache__/GenerationBioModel.cpython-37.pyc
 
 *.pyc
+
+# Model 
+*/model.json
+*/model.yaml
+*/weights.hdf5
