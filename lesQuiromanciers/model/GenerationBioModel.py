@@ -39,23 +39,24 @@ class GenerationBioModel:
         next_chars = []
         text = []
         biographie_df = pd.read_csv(filename, encoding="utf-8", sep=";", usecols = ['name', 'biographie'])
-        print(biographie_df)
+        # df_biographie[df_biographie['name'] == "Justin Bieber"].biographie
+        
         for i in range(0,len(biographie_df['biographie'])):
             text += ''.join([''.join(sentence) for sentence in biographie_df['biographie'][i]])
         sample_size = int(len(text) * 0.2)
         
-        global_bio = biographie_df.biographie
-        global_bio = global_bio[:sample_size]
-        global_bio = ''.join(map(str, global_bio)).lower()
-        self.biographie_sort = sorted(list(set(global_bio)))
+        self.global_bio = biographie_df.biographie
+        self.global_bio = self.global_bio[:sample_size]
+        self.global_bio = ''.join(map(str, self.global_bio)).lower()
+        self.biographie_sort = sorted(list(set(self.global_bio)))
         self.char_indices = dict((c, i) for i, c in enumerate(self.biographie_sort))
         self.indices_char = dict((i, c) for i, c in enumerate(self.biographie_sort))
         self.maxlen = 40
         self.step = 3
 
-        for i in range(0, len(global_bio) - self.maxlen, self.step):
-            sentences.append(global_bio[i: i + self.maxlen])
-            next_chars.append(global_bio[i + self.maxlen])
+        for i in range(0, len(self.global_bio) - self.maxlen, self.step):
+            sentences.append(self.global_bio[i: i + self.maxlen])
+            next_chars.append(self.global_bio[i + self.maxlen])
             
         self.X = np.zeros((len(sentences), self.maxlen, len(self.biographie_sort)), dtype=np.bool)
         self.Y = np.zeros((len(sentences), len(self.biographie_sort)), dtype=np.bool)
