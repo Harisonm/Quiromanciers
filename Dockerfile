@@ -8,4 +8,4 @@ RUN pip install https://storage.googleapis.com/intel-optimized-tensorflow/intel_
 COPY . /app
 WORKDIR /app
 
-ENTRYPOINT [ "python", "-m", "lesQuiromanciers.main"]
+# ENTRYPOINT [ "python", "-m", "lesQuiromanciers.main"]

@@ -3,9 +3,12 @@
 
 # Mac 
 */.IDEA
+*/.DS_Store
+.DS_Store
 
 # Python
-*/__pycache__
+*/__pycache__/
+lesQuiromanciers/api/wikipedia/__pycache__/
 
 # Configuration 
 */config.json
@@ -17,5 +20,14 @@ api/fb/src/config.json
 # Log notebook
 .ipynb_checkpoints/*
 
+
 .idea
 
+lesQuiromanciers/model/__pycache__/GenerationBioModel.cpython-37.pyc
+
+*.pyc
+
+# Model 
+*/model.json
+*/model.yaml
+*/weights.hdf5
