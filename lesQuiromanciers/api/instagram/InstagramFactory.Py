@@ -7,6 +7,15 @@ import datetime as dt
 
 class InstaFactory(object):
     def __init__(self, users: [str], start_date: dt.datetime, end_date: dt.datetime):
+        """Fonction d'initialisation de InstaFactory Class.
+            Seuls le texte et les métadonnées sont téléchargés.
+        Args:
+            users: Liste de pseudos d'utilisateurs desquels on récupère les posts Instagram
+            start_date: Début de la période des posts que l'on récupère
+            end_date: Fin de la période des posts que l'on récupère
+        Returns:
+            None
+        """
         self.users = users
         self.start_date = start_date
         self.end_date = end_date
@@ -39,13 +48,24 @@ class InstaFactory(object):
         self.end_date = end_date
 
     def download_data(self):
+        """Fonction pour télécharger les posts instagram selon les attributs de la classe (utilisateurs et période)
+        Args: None
+        Returns: None
+        """
         for user in self.users:
             profile = Profile.from_username(self.loader.context, user)
             for post in profile.get_posts():
                 if self.start_date < post.date <= self.end_date:
                     self.loader.download_post(post, target=user)
 
-    def dataframe_creation(self):
+    def dataframe_creation(self) -> pd.DataFrame:
+        """Extraction des métadonnées des fichiers json pour créer un DataFrame
+            Cette fonction doit être appelée après download_data(). Sinon le DataFrame sera logiquement vide
+        Args:
+            None
+        Returns:
+            DataFrame contenant la localisation du post et la légende générée par Instagram
+        """
         user_name = []
         location = []
         caption = []
