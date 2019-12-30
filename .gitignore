@@ -4,6 +4,7 @@
 # Mac 
 */.IDEA
 */.DS_Store
+.DS_Store
 
 # Python
 */__pycache__/
@@ -22,3 +23,11 @@ api/fb/src/config.json
 
 .idea
 
+lesQuiromanciers/model/__pycache__/GenerationBioModel.cpython-37.pyc
+
+*.pyc
+
+# Model 
+*/model.json
+*/model.yaml
+*/weights.hdf5

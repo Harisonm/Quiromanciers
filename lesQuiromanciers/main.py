@@ -1,5 +1,4 @@
-from lesQuiromanciers.api.wikipedia.WikiFactory import WikiFactory
-from lesQuiromanciers.model.CharLSTMModel import CharLSTMModel
+from lesQuiromanciers.model.GenerationBioModel import GenerationBioModel
 import pandas as pd
 import csv
 import os
@@ -10,14 +9,11 @@ if __name__ == "__main__":
 
     # One shot -> create csv
     # test = WikiFactory().build_biographie()
+    biographie_df = pd.read_csv(
+        filename, encoding="utf-8", sep=";", usecols=["name", "biographie"]
+    )
+    clstm = GenerationBioModel()
+    clstm.fit(biographie_df, epochs=50)
 
-    clstm = CharLSTMModel()
-
-    df_biographie = pd.read_csv(filename, encoding="utf-8", sep=";")
-    print(df_biographie.head())
-
-    clstm.fit(df_biographie, epochs=10)
-    clstm.generate("indubitably ")
-
-    # text = "\n".join([" ".join(sentence) for sentence in chunk["biographie"]])
+    # clstm.generate("indubitably ")
 
