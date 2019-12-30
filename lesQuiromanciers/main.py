@@ -1,7 +1,10 @@
 from lesQuiromanciers.model.GenerationBioModel import GenerationBioModel
+from lesQuiromanciers.api.instagram.InstagramFactory import InstaFactory
+from lesQuiromanciers.model.ClassificationInstagram import ClassificationInstagram
 import pandas as pd
 import csv
 import os
+import datetime as dt
 
 filename = "data/biographie_df.csv"
 
@@ -17,3 +20,13 @@ if __name__ == "__main__":
 
     # clstm.generate("indubitably ")
 
+    # Récupérer les données d'instagram sous forme de DataFrame
+    instaData = InstaFactory(["marty_the_cockerdale", "lecoindespatissiers", "cataniafoodprn", "guatemala_magica", "justinmin"],
+                     dt.datetime(2019, 11, 29),
+                     dt.datetime(2019, 12, 3))
+    instaData.download_data()
+    instaData.dataframe_creation()
+
+    #Classer les utilisateurs selon Traveler et/ou Foody
+    instaClassifier = ClassificationInstagram(instaData.dataframe_creation(), instaData.get_users())
+    instaClassifier.result()
