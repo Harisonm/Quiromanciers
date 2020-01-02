@@ -3,12 +3,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 
 class ClassificationInstagram:
-    def __init__(self, df: pd.DataFrame, users: [str]):
+    def __init__(self, df: pd.DataFrame):
         """Fonction d'initialisation de ClassificationInstagram Class.
             Le DataFrame est vidé des lignes vides/inutilisables, puis stocké dans 2 attributs
         Args:
             df : DataFrame contenant le pseudo de l'utilisateur, la localisation et la légende.
-            users : Liste d'utilisateurs présents dans le dataset
         Returns:
             None.
         """
@@ -19,7 +18,7 @@ class ClassificationInstagram:
 
         self.df_location = df.copy()
         self.df_description = df.copy()
-        self.users = users
+        self.users = df.User_Name.unique().tolist()
 
     def is_traveler(self, row):
         """Fonction déterminant si un utilisateur est "traveler" ou non
@@ -59,22 +58,16 @@ class ClassificationInstagram:
             return label
         return label
 
-    def result(self) -> pd.DataFrame:
-        """Fonction déterminant si les utilisateurs sont traveler et/ou foody
-        Args:
-            None
-        Returns:
-             DataFrame indiquant si les utilisateurs sont traveler et/ou foody
-        """
-        ## Traveler or not
+    def traveler_scoring(self):
         # Data cleaning
         no_location = self.df_location[(self.df_location['Location'] == '')].index
         self.df_location.drop(no_location, inplace=True)
-        #Count and is_traveler function
+        # Count and is_traveler function
         by_user_by_location = pd.DataFrame(self.df_location.groupby(['User_Name'])['Location'].nunique())
         by_user_by_location['traveler'] = by_user_by_location.apply(self.is_traveler, axis=1)
+        return by_user_by_location
 
-        ## Foody or not
+    def label_scoring(self):
         # Data cleaning
         no_description = self.df_description[(self.df_description['Caption'] == '')].index
         self.df_description.drop(no_description, inplace=True)
@@ -82,13 +75,14 @@ class ClassificationInstagram:
             (self.df_description['Caption'] == 'No photo description available.')].index
         self.df_description.drop(no_description, inplace=True)
 
+        # One row by user
         description_by_user = []
         for user in self.users:
             is_user = self.df_description['User_Name'] == user
             description_by_user.append(pd.DataFrame(self.df_description[is_user]))
         text_concat = self.df_description.groupby('User_Name').apply(lambda x: ' '.join(x.Caption))
 
-        #Bag of words and is_foody function
+        # Bag of words and is_foody function
         count = CountVectorizer()
         bag_of_words = count.fit_transform(text_concat)
         bag_of_words.toarray()
@@ -101,7 +95,21 @@ class ClassificationInstagram:
         for val in col_foody:
             values_foody.append(val)
         df_text['foody'] = values_foody
+        return df_text
+
+    def result(self) -> pd.DataFrame:
+        """Fonction déterminant si les utilisateurs sont traveler et/ou foody
+        Args:
+            None
+        Returns:
+             DataFrame indiquant si les utilisateurs sont traveler et/ou foody
+        """
+        # Traveler or not
+        by_user_by_location = self.traveler_scoring()
+
+        # Foody or not
+        by_user_by_label = self.label_scoring()
 
         # Jointure of both labels
-        classification = by_user_by_location.join(df_text).drop(0, axis=1)
+        classification = by_user_by_location.join(by_user_by_label).drop(0, axis=1)
         return classification

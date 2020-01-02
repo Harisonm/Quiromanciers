@@ -28,6 +28,6 @@ if __name__ == "__main__":
     instaData.dataframe_creation()
 
     #Classer les utilisateurs selon Traveler et/ou Foody
-    instaClassifier = ClassificationInstagram(instaData.dataframe_creation(), instaData.get_users())
+    instaClassifier = ClassificationInstagram(instaData.dataframe_creation())
     classification = instaClassifier.result()
     classification.to_csv(r'data/classification.csv')
