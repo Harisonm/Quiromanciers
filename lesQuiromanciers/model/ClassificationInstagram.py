@@ -1,5 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
+import spacy
+from math import exp
 
 
 class ClassificationInstagram:
@@ -19,6 +21,7 @@ class ClassificationInstagram:
         self.df_location = df.copy()
         self.df_description = df.copy()
         self.users = df.User_Name.unique().tolist()
+        self.nlp_en = spacy.load('en_core_web_lg')
 
     def is_traveler(self, row):
         """Fonction déterminant si un utilisateur est "traveler" ou non
@@ -58,6 +61,24 @@ class ClassificationInstagram:
             return label
         return label
 
+    def similarity_scoring(self, row, similarity_to_label):
+        """Fonction déterminant le score entre le label choisi et les mots détectés dans les photos de l'utilisateur
+        Args:
+            row : une ligne du BoW d'un utilisateur
+            similarity_to_label : Le score de similarité entre le label et les mots du BoW
+        Returns:
+            score : score de l'utilisateur sur le label
+        """
+        score = 0
+        total_count = 0
+        for word, sim in similarity_to_label.items():
+            value = sim
+            if (value < 0.4):
+                value = 0
+            total_count += row[word]
+            score += row[word] * exp(value * 3)
+        return score / total_count
+
     def traveler_scoring(self):
         # Data cleaning
         no_location = self.df_location[(self.df_location['Location'] == '')].index
@@ -88,11 +109,23 @@ class ClassificationInstagram:
         bag_of_words.toarray()
         feature_names = count.get_feature_names()
         bow_description = pd.DataFrame(bag_of_words.toarray(), columns=feature_names)
-        col_foody = bow_description.apply(self.is_foody, axis=1)
 
+        # Word similarity
+        label = self.nlp_en('food')
+        similarity_to_label = {}
+        for word in feature_names:
+            token = self.nlp_en(word)
+            token = token[0]
+            default_similarity = 0
+            if (token.has_vector):
+                default_similarity = label.similarity(token)
+            similarity_to_label[token.text] = default_similarity
+        score_foody = bow_description.apply(self.similarity_scoring, args=(similarity_to_label,), axis=1)
+
+        # Join
         df_text = pd.DataFrame(text_concat)
         values_foody = []
-        for val in col_foody:
+        for val in score_foody:
             values_foody.append(val)
         df_text['foody'] = values_foody
         return df_text
