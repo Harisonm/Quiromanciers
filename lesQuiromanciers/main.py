@@ -1,6 +1,6 @@
-from lesQuiromanciers.model.GenerationBioModel import GenerationBioModel
+from lesQuiromanciers.model.model_tf.GenerationBioModel import GenerationBioModel
 from lesQuiromanciers.api.instagram.InstagramFactory import InstaFactory
-from lesQuiromanciers.model.ClassificationInstagram import ClassificationInstagram
+from lesQuiromanciers.model.insta_model.InstagramClassification import InstagramClassification
 import pandas as pd
 import csv
 import os

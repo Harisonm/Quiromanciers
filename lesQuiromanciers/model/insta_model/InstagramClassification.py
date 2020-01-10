@@ -4,7 +4,7 @@ import spacy
 from math import exp
 
 
-class ClassificationInstagram:
+class InstagramClassification:
     def __init__(self, df: pd.DataFrame):
         """Fonction d'initialisation de ClassificationInstagram Class.
             Le DataFrame est vidé des lignes vides/inutilisables, puis stocké dans 2 attributs
