@@ -1,27 +1,37 @@
 FROM python:3.7
+LABEL Author="Les Quiromanciers"
+LABEL E-mail="manitra.harison@gmail.com"
+LABEL version="0.0.1b"
+
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY ./requirements.txt /requirements.txt
-
-RUN pip install -r requirements.txt && \
-    #!/usr/bin/env bash
-    export FN_AUTH_REDIRECT_URI=http://127.0.0.1:8040/ && \
-    export FN_BASE_URI=http://127.0.0.1:8040 && \
-    export OAUTHLIB_INSECURE_TRANSPORT=1 && \
-    export FLASK_APP=lesQuiromanciers/app.py && \
-    export FLASK_DEBUG=1 && \
-    export FLASK_ENV=development && \
-    adduser pyuser && \
-    export FN_FLASK_SECRET_KEY=SOMETHING RANDOM AND SECRET
+# adduser pyuser
+#!/usr/bin/env bash
+ENV FN_AUTH_REDIRECT_URI "http://127.0.0.1:8040/"
+ENV FN_BASE_URI "http://127.0.0.1:8040"
+ENV OAUTHLIB_INSECURE_TRANSPORT 1
+ENV FLASK_APP "lesQuiromanciers/backend/app.py"
+ENV FLASK_DEBUG True
+ENV FLASK_ENV "development"
 
 # development
 COPY . /app
 WORKDIR /app
+# COPY Pip* /app/
 
-RUN chmod +x lesQuiromanciers/app.py && \
-    chown -R pyuser:pyuser /app
+# RUN pip install --upgrade pip && \
+#     pip install pipenv && \
+#     pipenv install --dev --system --deploy --ignore-pipfile
 
-USER pyuser
+RUN pip install -r requirements.txt
+
+
+
+# RUN chmod +x lesQuiromanciers/app.py && \
+#     chown -R pyuser:pyuser /app
+
+# USER pyuser
 EXPOSE 5000
 EXPOSE 8040
 
