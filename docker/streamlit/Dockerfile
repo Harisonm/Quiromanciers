@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 COPY . /app
 WORKDIR /app
 
-CMD streamlit run lesQuiromanciers/web/App_UI.py
+CMD streamlit run lesQuiromanciers/web/lesQuiromanciersUI.py
