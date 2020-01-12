@@ -21,8 +21,8 @@ instaloader==4.2.10
 itsdangerous==1.1.0
 Jinja2==2.10.3
 joblib==0.14.1
-Keras-Applications==1.0.8
-Keras-Preprocessing==1.1.0
+# Keras-Applications==1.0.8
+# Keras-Preprocessing==1.1.0
 Markdown==3.1.1
 MarkupSafe==1.1.1
 more-itertools==8.0.2
@@ -45,9 +45,9 @@ sklearn==0.0
 soupsieve==1.9.5
 spacy==2.2.3
 srsly==1.0.1
-tensorboard==1.15.0
-tensorflow==1.15.0
-tensorflow-estimator==1.15.1
+# tensorboard==1.15.0
+# tensorflow==1.15.0
+# tensorflow-estimator==1.15.1
 termcolor==1.1.0
 thinc==7.3.1
 tqdm==4.31.1

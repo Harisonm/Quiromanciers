@@ -20,5 +20,17 @@ docker build . -t les_quiromanciers
 
 ## Run container from dockerfile
 ```bash
-docker run -d -p 8040:8040 les_quiromanciers
+docker run -d -p 5000:5000 les_quiromanciers
+```
+
+## Run all container from docker-compose
+
+Build
+```bash
+docker-compose -f docker-compose.yml build
+```
+
+Run
+```bash
+docker-compose -f docker-compose.yml up
 ```
