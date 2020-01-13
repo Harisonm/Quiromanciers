@@ -44,8 +44,7 @@ class WikiFactory(object):
         except:
             print_exc()
 
-    def build_biographie(self):
-
+    def build_biographie(self,file_name):
         biographie_df = pd.DataFrame(columns=["name", "biographie"])
         name_people = self.__get_person_name()
 
@@ -64,7 +63,7 @@ class WikiFactory(object):
                 print_exc()
 
         biographie_df.to_csv(
-            path_or_buf="data/biographie_df.csv",
+            path_or_buf=file_name,
             encoding="utf-8",
             sep=";",
             index=False,
