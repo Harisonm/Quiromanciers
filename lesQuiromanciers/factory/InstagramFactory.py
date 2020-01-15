@@ -5,7 +5,7 @@ import pandas as pd
 import datetime as dt
 
 
-class InstaFactory(object):
+class InstagramFactory(object):
     def __init__(self, users: [str], start_date: dt.datetime, end_date: dt.datetime):
         """Fonction d'initialisation de InstaFactory Class.
             Seuls le texte et les métadonnées sont téléchargés.
