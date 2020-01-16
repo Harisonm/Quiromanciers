@@ -2,7 +2,7 @@
 
 ## Run project from root path
 ```bash
-python -m lesQuiromanciers.main
+streamlit run LesQuiromanciersUI.py
 ```
 
 # Run apps from Docker
