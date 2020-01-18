@@ -48,14 +48,12 @@ jobs:
       # Build the Docker image
       - name: Build
         run: |
-          docker build -t gcr.io/"$GKE_PROJECT"/"$IMAGE":"latest" \
-            --build-arg GITHUB_SHA=latest \
-            --build-arg GITHUB_REF="$GITHUB_REF" .
+          docker build -t gcr.io/"$GKE_PROJECT""/les-quiromanciers:latest" .
 
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
-          docker push gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
+          docker push gcr.io/$GKE_PROJECT/les-quiromanciers:latest
 
       # Set up kustomize
       - name: Set up Kustomize
@@ -67,7 +65,7 @@ jobs:
       - name: Deploy
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
-          ./kustomize edit set image gcr.io/$GKE_PROJECT/$IMAGE:${GITHUB_SHA}
+          ./kustomize edit set image gcr.io/$GKE_PROJECT/les-quiromanciers:latest
           ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/gke-test
+          kubectl rollout status deployment/les-quiromanciers
           kubectl get services -o wide
