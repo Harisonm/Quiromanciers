@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: les-quiromanciers
+  namespace: les-quiromanciers
+spec:
+  template:
+    spec:
+      containers:
+        - name: les-quiromanciersxxxxx
+          image: gcr.io/neomail-258716/les-quiromanciers:latest
+          imagePullPolicy: Always
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/gcp/service-account-key.json"
+            - name: PROJECT_ID
+              value: "neomail-258716"
+            - name: ENVIRONMENT
+              value: PRODUCTION
+
+          volumeMounts:
+            - mountPath: "/files"
+              name: les-quiromanciers
+            - mountPath: /gcp/service-account-key.json
+              name: gcp-service-account
+              readOnly: true
+              subPath: service-account-key.json
+      volumes:
+        - name: gcp-service-account
+          secret:
+            secretName: gcp-service-account
+        - name: les-quiromanciers
+          persistentVolumeClaim:
+            claimName: les-quiromanciers
+      restartPolicy: Never
