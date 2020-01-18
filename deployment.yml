@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: les-quiromanciers
+spec:
+  selector:
+    matchLabels:
+      app: les-quiromanciers
+  template:
+    metadata:
+      labels:
+        app: les-quiromanciers
+    spec:
+      containers:
+        - name: les-quiromanciers
+          image: gcr.io/neomail-258716/les-quiromanciers:latest
+          ports:
+            - containerPort: 8501
