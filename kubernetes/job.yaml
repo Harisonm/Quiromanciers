@@ -17,7 +17,6 @@ spec:
               value: "neomail-258716"
             - name: ENVIRONMENT
               value: PRODUCTION
-
           volumeMounts:
             - mountPath: "/files"
               name: les-quiromanciers
