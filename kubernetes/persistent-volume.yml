@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-01-les-quiromanciers
+  namespace: les-quiromanciers
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /nfs-neomail/nfs_neomail/
+    server: 10.135.172.90
