@@ -23,7 +23,7 @@ class BiographieGenerator:
             model_name=self.model_name,
             steps=1000,
             restore_from="fresh",
-            run_name="run1",
+            run_name=self.run_name,
             print_every=10,
             sample_every=200,
             save_every=500,
@@ -32,22 +32,6 @@ class BiographieGenerator:
 
         # gpt2.load_gpt2(sess, run_name='run1')
         # gpt2.generate(sess, run_name='run1')
-
-    def load_a_trained_model_checkpoint():
-        pass
-
-    # def generate_to_file(self):
-    #     gen_file = 'gpt2_gentext_{:%Y%m%d_%H%M%S}.txt'.format(datetime.utcnow())
-
-    #     gpt2.generate_to_file(sess,
-    #                         destination_path=gen_file,
-    #                         length=500,
-    #                         temperature=0.7,
-    #                         nsamples=100,
-    #                         batch_size=20
-    #                         )
-    #     # may have to run twice to get file to download
-    #     files.download(gen_file)
 
     def generate_biographie(self, prefix: str):
         
