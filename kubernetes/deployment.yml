@@ -17,5 +17,5 @@ spec:
           ports:
             - containerPort: 8501
           volumeMounts:
-            - mountPath: "/files"
+            - mountPath: "/nfs-01-lq"
               name: les-quiromanciers
