@@ -11,21 +11,16 @@ spec:
           image: gcr.io/neomail-258716/les-quiromanciers:latest
           imagePullPolicy: Always
           env:
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/gcp/service-account-key.json"
             - name: PROJECT_ID
               value: "neomail-258716"
             - name: ENVIRONMENT
               value: PRODUCTION
           volumeMounts:
             - mountPath: "/files"
-              name: les-quiromanciers
+              name: nfs-01-lq
 
       volumes:
-        - name: gcp-service-account
-          secret:
-            secretName: gcp-service-account
-        - name: les-quiromanciers
+        - name: nfs-01-lq
           persistentVolumeClaim:
-            claimName: les-quiromanciers
+            claimName: nfs-01-lq
       restartPolicy: Never
