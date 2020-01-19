@@ -10,7 +10,7 @@ generate_data = st.button("Generate Data") # A Supprimer -> Test sur Kube
 traning = st.button("traning Model")
 generate = st.button("Generate Model")
 
-file_name_source = "data/global_name_people.csv"
+file_name_source = "data/people_test.csv"
 file_name_destination = "data/biographie_df.txt"
 
 if generate_data:
