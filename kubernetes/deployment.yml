@@ -16,3 +16,6 @@ spec:
           image: gcr.io/neomail-258716/les-quiromanciers:latest
           ports:
             - containerPort: 8501
+          volumeMounts:
+            - mountPath: "/nfs-01-lq"
+              name: les-quiromanciers
