@@ -18,10 +18,9 @@ spec:
             - containerPort: 8501
           volumeMounts:
             - mountPath: "/files"
-              name: nfs-01-lq
-
+              name: nfs-lq
       volumes:
-        - name: nfs-01-lq
+        - name: nfs-lq
           persistentVolumeClaim:
-            claimName: nfs-01-lq
+            claimName: nfs-lq
       restartPolicy: Always
