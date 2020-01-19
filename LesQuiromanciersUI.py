@@ -3,9 +3,8 @@ import pandas as pd
 import numpy as np
 import requests
 from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
-from lesQuiromanciers.factory.InstagramFactory import InstagramFactory
-from lesQuiromanciers.factory.WikiFactory import WikiFactory
-
+from lesQuiromanciers.lesQuiromanciers.factory.InstagramFactory import InstagramFactory
+from lesQuiromanciers.lesQuiromanciers.factory.WikiFactory import WikiFactory
 
 prefix = st.text_input("write beginning biographie")
 st.write("First part in biographie : ", prefix)

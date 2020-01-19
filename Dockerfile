@@ -1,6 +1,10 @@
 # base image
 FROM python:3.7
 
+
+RUN apt-get update && apt-get install -y nfs-common \
+    && rm -rf /var/lib/apt/lists/*
+
 # streamlit-specific commands
 RUN mkdir -p /root/.streamlit
 RUN bash -c 'echo -e "\
@@ -12,13 +16,12 @@ RUN bash -c 'echo -e "\
     enableCORS = false\n\
     " > /root/.streamlit/config.toml'
 
-# copy over and install packages
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
-
-
 # exposing default port for streamlit
 EXPOSE 8501
+
+# copy over and install packages
+COPY requirements.txt ./
+RUN pip3 install -r requirements.txt
 
 # copying everything over
 COPY . .
