@@ -1,14 +1,29 @@
+# base image
 FROM python:3.7
 
-WORKDIR /usr/src/app
 
-COPY docker/streamlit/requirements.txt ./
+RUN apt-get update && apt-get install -y nfs-common \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install -r requirements.txt
+# streamlit-specific commands
+RUN mkdir -p /root/.streamlit
+RUN bash -c 'echo -e "\
+    [general]\n\
+    email = \"\"\n\
+    " > /root/.streamlit/credentials.toml'
+RUN bash -c 'echo -e "\
+    [server]\n\
+    enableCORS = false\n\
+    " > /root/.streamlit/config.toml'
 
-COPY . /app
-WORKDIR /app
-
+# exposing default port for streamlit
 EXPOSE 8501
+
+# copy over and install packages
+COPY requirements.txt ./
+RUN pip3 install -r requirements.txt
+
+# copying everything over
+COPY . .
 
 CMD streamlit run LesQuiromanciersUI.py
