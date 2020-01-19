@@ -20,10 +20,7 @@ spec:
           volumeMounts:
             - mountPath: "/files"
               name: les-quiromanciers
-            - mountPath: /gcp/service-account-key.json
-              name: gcp-service-account
-              readOnly: true
-              subPath: service-account-key.json
+
       volumes:
         - name: gcp-service-account
           secret:
