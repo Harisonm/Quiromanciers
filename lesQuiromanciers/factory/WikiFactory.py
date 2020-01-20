@@ -41,10 +41,10 @@ class WikiFactory(object):
 
     def __get_person_name(self,name_file_source):
         """
-        __get_person_name [summary]
+        __get_person_name : Fonction qui vas lire un fichier pour le stocker dans un dataframe
         
         Returns:
-            [type]: [description]
+            pd.DataFrame: Dataframe de type Pandas
         """
         try:
             df = pd.read_csv(name_file_source, header=None, encoding="utf-8", sep=";")
@@ -56,13 +56,13 @@ class WikiFactory(object):
     # TO DO : write this with multithreading using concurrent.futures.ProcessPoolExecutor with executor.submit
     def __get_biographie(name):
         """
-        __get_biographie [summary]
+        __get_biographie : Fonction qui permet d'obtenir la page biographie d'eune personne.
         
         Args:
-            name ([type]): [description]
+            name (str): Nom de la personne a chercher 
         
         Returns:
-            [type]: [description]
+            str : La page biographie wikipedia de la personne passé en argument.
         """
         try:
             return wikipedia.page(name).content
@@ -72,13 +72,13 @@ class WikiFactory(object):
     @staticmethod        
     def clean_data(words):
         """
-        clean_data [summary]
+        clean_data : Mise au propre des données du dataframe
         
         Args:
-            words ([type]): [description]
+            words (str): Les mots de la biographie
         
         Returns:
-            [type]: [description]
+            str: Les mots mise au propre
         """
         words = str(words)
         words = re.sub(r'\(.*?\)', '', words)
@@ -88,13 +88,13 @@ class WikiFactory(object):
     @staticmethod
     def tag_name(words):
         """
-        tag_name [summary]
+        tag_name : fonction qui permet de tagger les noms dans les biographies afin de les tranformer par #nature
         
         Args:
-            words ([type]): [description]
+            words (list): biographie stocké dans une liste.
         
         Returns:
-            [type]: [description]
+            list: Biographie taggé stocker dans une liste 
         """
         name = str(words[0])
         names = name.split(' ')
@@ -112,10 +112,11 @@ class WikiFactory(object):
 
     def build_biographie(self,file_name_source, file_name_destination):
         """
-        build_biographie [summary]
+        build_biographie : Construit la biographie a partir des noms des entités (personne)
         
         Args:
-            file_name ([type]): [description]
+            file_name_source (str): Nom du fichier d'entée.
+            file_name_destination(str): Nom du fichier de sortie.
         """
         df_biographie = pd.DataFrame(columns=["name", "biographie"])
         
@@ -151,5 +152,7 @@ class WikiFactory(object):
             
         except:
             print_exc()
+            
+        return True
         
 
