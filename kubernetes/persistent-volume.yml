@@ -9,5 +9,5 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /nfs-01/shared
-    server: 10.29.82.178
+    path: /nfs-lq/shared
+    server: 172.26.165.26
