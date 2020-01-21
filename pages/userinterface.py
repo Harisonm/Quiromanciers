@@ -50,9 +50,10 @@ def content():
         response = requests.get(url)
         img = Image.open(BytesIO(response.content))
         st.image(img, width=200)
-        st.write(bio_style(biographie))
-
-
+        st.write("# "+name)
+        print(biographie)
+        st.write(bio_style(str(biographie)))
+  
 def bio_style(bio):
     bio = re.sub("=", "#", bio)
     return bio

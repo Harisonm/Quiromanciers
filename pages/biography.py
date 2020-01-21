@@ -19,8 +19,7 @@ def content():
         name_list['Label'])
     generate_data = st.button("Fetch Data From Wikipedia")
 
-    # file_name_source = "data/" + name_list[name_list['Label'] == option]['Filename']
-    file_name_source = "data/people_test.csv"
+    file_name_source = "data/" + name_list[name_list['Label'] == option]['Filename']
     file_name_destination = "data/biographie" + option.replace(" ","") + ".txt"
     if generate_data:
         flag = WikiFactory().build_biographie(file_name_source,file_name_destination)
@@ -38,9 +37,8 @@ def content():
     if generate:
         biographie = BiographieGenerator(model_name="124M", run_name='run1').generate_biographie(prefix=prefix)
         st.write(biographie)
-        print(biographie)
-        # st.write("# "+name)
-        # st.write(bio_style(str(biographie)))
+        st.write("# "+name)
+        st.write(bio_style(str(biographie)))
 
 
 def bio_style(bio):
