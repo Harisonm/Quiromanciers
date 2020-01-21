@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: les-quiromanciers
+  namespace: les-quiromanciers
 spec:
   selector:
     matchLabels:
@@ -16,3 +17,9 @@ spec:
           image: gcr.io/neomail-258716/les-quiromanciers:latest
           ports:
             - containerPort: 8501
+
+      volumes:
+        - name: nfs-01-lq
+          persistentVolumeClaim:
+            claimName: nfs-01-lq
+      restartPolicy: Never
