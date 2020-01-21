@@ -22,6 +22,7 @@ EXPOSE 8501
 # copy over and install packages
 COPY requirements.txt ./
 RUN pip3 install -r requirements.txt
+RUN python -m spacy download en_core_web_lg
 
 # copying everything over
 COPY . .
