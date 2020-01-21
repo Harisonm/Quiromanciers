@@ -19,7 +19,7 @@ spec:
             - containerPort: 8501
 
       volumes:
-        - name: nfs-01-lq
+        - name: nfs-lq
           persistentVolumeClaim:
-            claimName: nfs-01-lq
+            claimName: nfs-lq
       restartPolicy: Never
