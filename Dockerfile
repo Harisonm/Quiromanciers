@@ -26,4 +26,4 @@ RUN pip3 install -r requirements.txt
 # copying everything over
 COPY . .
 
-CMD streamlit run LesQuiromanciersUI.py
+CMD streamlit run index.py
