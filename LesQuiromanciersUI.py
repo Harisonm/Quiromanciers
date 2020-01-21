@@ -18,7 +18,7 @@ def bio_style(bio):
 
 
 image = Image.open('data/sea_banner.jpeg')
-file_name_source = "data/people_test.csv"
+file_name_source = "data/global_name_people.csv"
 file_name_destination = "data/biographie_df.txt"
 
 st.image(image, use_column_width=True)

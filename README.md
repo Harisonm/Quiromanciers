@@ -1,19 +1,35 @@
-# Run apps from python
+# Quiromanciers 
+
+
+Quiromanciers is an Apps that allows you to generate your own biography of a part of what you love.
+Quiromanciers is based on the GPT2 model of openAI.
+
+Techologie using: 
+- Python3
+- Kubernetes
+- Docker 
+
+Packages using in python (seeing for more information requirements.txt):
+- tensorflow
+- streamlit 
+- pandas
+- wikipedia (API Wikipedia)
+- instaload (API Instagram)
 
 ## Run project from root path
 ```bash
 streamlit run LesQuiromanciersUI.py
 ```
 
-# Run apps from Docker
+## Run apps from Docker
 
-## Build container from dockerhfile
+### Build container from dockerhfile
 ```bash
 docker build . -t les-quiromanciers
 ```
 
 
-## Run container from dockerfile
+### Run container from dockerfile
 ```bash
 docker run -d -p 8501:8501 les-quiromanciers
 ```
@@ -29,7 +45,7 @@ docker push gcr.io/neomail-258716/les-quiromanciers:latest
 ```
 
 
-# Configure Workflows to GKE
+## Configure Workflows github to GKE
 
 This workflow will build a docker container, publish it to Google Container Registry, and deploy it to GKE.
 
