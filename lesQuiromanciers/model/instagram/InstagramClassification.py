@@ -2,10 +2,14 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 import spacy
 from math import exp
+import matplotlib.pyplot as plt
+from math import pi
+import math
+import streamlit as st
 
 
 class InstagramClassification:
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pd.DataFrame, labels: [str]):
         """Fonction d'initialisation de ClassificationInstagram Class.
             Le DataFrame est vidé des lignes vides/inutilisables, puis stocké dans 2 attributs
         Args:
@@ -15,6 +19,7 @@ class InstagramClassification:
         """
         string_empty = df[(df["Location"] == "") & (df["Caption"] == "")].index
         df.drop(string_empty, inplace=True)
+
         no_description = df[
             (df["Location"] == "")
             & (df["Caption"] == "No photo description available.")
@@ -25,6 +30,9 @@ class InstagramClassification:
         self.df_description = df.copy()
         self.users = df.User_Name.unique().tolist()
         self.nlp_en = spacy.load("en_core_web_lg")
+        self.labels = labels
+        self.classification = pd.DataFrame()
+
 
     def is_traveler(self, row):
         """Fonction déterminant si un utilisateur est "traveler" ou non
@@ -38,30 +46,6 @@ class InstagramClassification:
             label = True
         else:
             label = False
-        return label
-
-    def is_foody(self, row):
-        """Fonction déterminant si un utilisateur est "foody" ou non
-            Si l'utilisateur a photographié au moins 1 caffé, au moins 100 boissons[...] alors il est foody
-        Args:
-            row : une ligne d'un dataframe contenant au minimum les colonnes coffee, drink, eating, food, pizza
-        Returns:
-            label : booléen True si l'utilisateur est foody
-        """
-        label = False
-        try:
-            if row["coffee"] >= 1:
-                label = True
-            elif row["drink"] >= 100:
-                label = True
-            elif row["eating"] >= 100:
-                label = True
-            elif row["food"] >= 100:
-                label = True
-            elif row["pizza"] >= 10:
-                label = True
-        except:
-            return label
         return label
 
     def similarity_scoring(self, row, similarity_to_label):
@@ -80,7 +64,7 @@ class InstagramClassification:
                 value = 0
             total_count += row[word]
             score += row[word] * exp(value * 3)
-        return score / total_count
+        return (score / total_count) - 0.75
 
     def traveler_scoring(self):
         # Data cleaning
@@ -95,7 +79,7 @@ class InstagramClassification:
         )
         return by_user_by_location
 
-    def label_scoring(self):
+    def label_scoring(self, label_to_score: str):
         # Data cleaning
         no_description = self.df_description[
             (self.df_description["Caption"] == "")
@@ -123,7 +107,7 @@ class InstagramClassification:
         bow_description = pd.DataFrame(bag_of_words.toarray(), columns=feature_names)
 
         # Word similarity
-        label = self.nlp_en("food")
+        label = self.nlp_en(label_to_score)
         similarity_to_label = {}
         for word in feature_names:
             token = self.nlp_en(word)
@@ -138,10 +122,10 @@ class InstagramClassification:
 
         # Join
         df_text = pd.DataFrame(text_concat)
-        values_foody = []
+        values_label = []
         for val in score_foody:
-            values_foody.append(val)
-        df_text["foody"] = values_foody
+            values_label.append(val)
+        df_text[label_to_score] = values_label
         return df_text
 
     def result(self) -> pd.DataFrame:
@@ -153,10 +137,48 @@ class InstagramClassification:
         """
         # Traveler or not
         by_user_by_location = self.traveler_scoring()
+        self.classification = by_user_by_location
 
-        # Foody or not
-        by_user_by_label = self.label_scoring()
+        for lab in self.labels:
+            # Foody or not
+            by_user_by_label = self.label_scoring(lab)
 
-        # Jointure of both labels
-        classification = by_user_by_location.join(by_user_by_label).drop(0, axis=1)
-        return classification
+            # Jointure of both labels
+            self.classification = self.classification.join(by_user_by_label).drop(0, axis=1)
+        return self.classification
+
+    def print_classification(self):
+        scores = {}
+        somme = 0
+        for lab in self.labels:
+            somme += self.classification[lab][0]
+        for lab in self.labels:
+            scores[lab] = self.classification[lab][0] / somme * 100
+        max_to_print = math.ceil(max(scores.values()) / 10) * 10
+
+        df = pd.DataFrame({
+            'group': ['Labels'],
+            'foody': [scores['food']],
+            'musician': [scores['musician']],
+            'travel': [scores['travel']],
+        })
+
+        categories = list(df)[1:]
+        N = len(categories)
+        values = df.loc[0].drop('group').values.flatten().tolist()
+        values += values[:1]
+
+        angles = [n / float(N) * 2 * pi for n in range(N)]
+        angles += angles[:1]
+
+        ax = plt.subplot(111, polar=True)
+
+        plt.xticks(angles[:-1], categories, color='grey', size=8)
+        ax.set_rlabel_position(0)
+        plt.yticks(range(0, max_to_print, 10), [k for k in range(0, max_to_print, 10)], color="grey", size=7)
+        plt.ylim(0, max_to_print)
+
+        ax.plot(angles, values, linewidth=1, linestyle='solid')
+        ax.fill(angles, values, 'b', alpha=0.1)
+
+        st.pyplot()
