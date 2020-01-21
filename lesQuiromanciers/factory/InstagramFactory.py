@@ -99,7 +99,7 @@ class InstagramFactory(object):
                             else:
                                 location.append("")
                             if "accessibility_caption" in post["node"]:
-                                caption.append(post["node"]["accessibility_caption"])
+                                caption.append(post["node"]["accessibility_caption"].replace('Image may contain: ', ''))
                             else:
                                 caption.append("")
         dataset = {"User_Name": user_name, "Location": location, "Caption": caption}
