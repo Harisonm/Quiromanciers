@@ -38,6 +38,7 @@ def content():
     if generate:
         biographie = BiographieGenerator(model_name="124M", run_name='run1').generate_biographie(prefix=prefix)
         st.write(biographie)
+        print(biographie)
         # st.write("# "+name)
         # st.write(bio_style(str(biographie)))
 
