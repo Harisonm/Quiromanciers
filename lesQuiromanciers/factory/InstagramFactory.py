@@ -3,6 +3,8 @@ import os
 import json
 import pandas as pd
 import datetime as dt
+import streamlit as st
+import os
 
 
 class InstagramFactory(object):
@@ -60,11 +62,15 @@ class InstagramFactory(object):
         Args: None
         Returns: None
         """
+        os.chdir("data/")
         for user in self.users:
+            if os.path.isdir(user):
+                continue
             profile = Profile.from_username(self.loader.context, user)
             for post in profile.get_posts():
                 if self.start_date < post.date <= self.end_date:
                     self.loader.download_post(post, target=user)
+        os.chdir("../")
 
     def dataframe_creation(self) -> pd.DataFrame:
         """Extraction des métadonnées des fichiers json pour créer un DataFrame
@@ -77,10 +83,11 @@ class InstagramFactory(object):
         user_name = []
         location = []
         caption = []
+        st.write(os.getcwd())
         for user in self.users:
-            if not os.path.isdir(user):
+            if not os.path.isdir("data/" + user):
                 break
-            directory = user + "/"
+            directory = "data/" + user + "/"
             for element in os.listdir(directory):
                 if element.endswith(".json"):
                     user_name.append(user)
