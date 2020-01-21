@@ -25,4 +25,4 @@ spec:
         - name: nfs-lq
           persistentVolumeClaim:
             claimName: nfs-lq
-      restartPolicy: Never
+      restartPolicy: Always
