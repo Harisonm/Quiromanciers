@@ -7,10 +7,12 @@ spec:
   selector:
     matchLabels:
       app: les-quiromanciers
+      namespace: les-quiromanciers
   template:
     metadata:
       labels:
         app: les-quiromanciers
+        namespace: les-quiromanciers
     spec:
       containers:
         - name: les-quiromanciers
