@@ -31,7 +31,7 @@ def content():
     if generate_data:
         flag = WikiFactory().build_biographie(file_name_source,file_name_destination)
 
-     if traning:
+    if traning:
         BiographieGenerator(model_name="124M", run_name='run1').prepare_fine_tuning(file_name_destination)
 
     name = st.text_input("Give your firstname folling your name, like example : Leonardo DICAPRIO")
@@ -53,8 +53,8 @@ def content():
         st.write(bio_style(biographie))
 
 
-
 def bio_style(bio):
     bio = re.sub("=", "#", bio)
     return bio
+
 

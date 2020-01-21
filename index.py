@@ -14,10 +14,9 @@ PAGES = {
 
 
 def main():
-    page = st.sidebar.radio("Navigate", options = list(PAGES.keys()))
+    page = st.sidebar.radio("Menu", options=list(PAGES.keys()))
     st.title(page)
     PAGES[page].content()
-
 
 
 if __name__ == "__main__":
