@@ -7,52 +7,46 @@ import numpy as np
 import requests
 from io import BytesIO
 from PIL import Image
-from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
+#from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
 from lesQuiromanciers.factory.InstagramFactory import InstagramFactory
 from lesQuiromanciers.model.instagram.InstagramClassification import (
     InstagramClassification,
 )
 import datetime as dt
-from lesQuiromanciers.factory.WikiFactory import WikiFactory
+#from lesQuiromanciers.factory.WikiFactory import WikiFactory
 from streamlit.compatibility import setup_2_3_shims
 
 def content():
     st.sidebar.title("User Interface")
-    image = Image.open('data/sea_banner.jpeg')
-    file_name_source = "data/people.csv"
-    file_name_destination = "data/biographie_df.txt"
+    pseudoIG = st.text_input(
+        "Please enter your instagram pseudo. Example : guatemala_magica, jessieware, chef.etchebest, joshmeader22")
+    classi = st.button("Generate")
+    if classi:
+        instaData = InstagramFactory(
+            [
+                pseudoIG
+            ],
+            dt.datetime(2019, 8, 1),
+            dt.datetime(2019, 12, 31),
+        )
+        instaData.download_data()
+        df = instaData.dataframe_creation()
 
-    st.image(image, use_column_width=True)
-    setup_2_3_shims(globals())
-    generate_data = st.button("Generate Data")  # A Supprimer -> Test sur Kube
-    traning = st.button("traning Model")
 
-    flag = False
-    if generate_data:
-        flag = WikiFactory().build_biographie(file_name_source,file_name_destination)
+        # Classer les utilisateurs selon Traveler et/ou Foody
+        instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
+        classification = instaClassifier.result()
 
-    if traning:
-        BiographieGenerator(model_name="124M", run_name='run1').prepare_fine_tuning(file_name_destination)
 
-    name = st.text_input("Give your firstname folling your name, like example : Leonardo DICAPRIO")
-    prefix = st.text_input("Write tailing about you to begin your biographie, example : Mani was born in Madagascar.")
+        instaClassifier.print_classification()
 
-    generate = st.button("Generate Model")
+        dict = {}
+        dict['foody'] = classification['food']
+        dict['musician'] = classification['music']
+        dict['traveler'] = classification['mountain']
 
-    if generate:
-        biographie = BiographieGenerator(model_name="124M", run_name='run1').generate_biographie(prefix=prefix)
-        st.write("# "+name)
-        """
-        REMPLACER URL PAR L URL DE LA PHOTO DE TOTO
-    
-        """
-        url = "https://upload.wikimedia.org/wikipedia/commons/4/4a/Eminem_-_Concert_for_Valor_in_Washington%2C_D.C._Nov._11%2C_2014_%282%29_%28Cropped%29.jpg"
-        response = requests.get(url)
-        img = Image.open(BytesIO(response.content))
-        st.image(img, width=200)
-        st.write("# "+name)
-        print(biographie)
-        st.write(bio_style(str(biographie)))
+        major_label = max(dict)
+        st.write('Congrats, you are ' + major_label)
   
 def bio_style(bio):
     bio = re.sub("=", "#", bio)
