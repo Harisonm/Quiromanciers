@@ -12,20 +12,9 @@ spec:
     metadata:
       labels:
         app: les-quiromanciers
-        namespace: les-quiromanciers
     spec:
       containers:
         - name: les-quiromanciers
-          namespace: les-quiromanciers
           image: gcr.io/neomail-258716/les-quiromanciers:latest
           ports:
             - containerPort: 8501
-          volumeMounts:
-            - mountPath: "/files"
-              name: nfs-lq
-
-      volumes:
-        - name: nfs-lq
-          persistentVolumeClaim:
-            claimName: nfs-lq
-      restartPolicy: Always
