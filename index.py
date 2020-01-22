@@ -3,13 +3,15 @@ import pages.userinterface
 import pages.biography
 import pages.instagram
 import pages.about
+import pages.technology
 
 
 PAGES = {
     "User Interface": pages.userinterface,
     "Biography Generation": pages.biography,
     "Instagram Classification": pages.instagram,
-    "About": pages.about
+    "About": pages.about,
+    "Technology": pages.technology
 }
 
 
