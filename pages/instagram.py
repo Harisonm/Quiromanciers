@@ -7,7 +7,7 @@ import datetime as dt
 
 def content():
     st.sidebar.title("Instagram Classification")
-    pseudoIG = st.text_input("Please enter your instagram pseudo. Example : guatemala_magica")
+    pseudoIG = st.text_input("Please enter your instagram pseudo. Example : guatemala_magica, jessieware, chef.etchebest, joshmeader22")
     classi = st.button("Tell me who am I")
     if classi:
         instaData = InstagramFactory(
@@ -22,7 +22,7 @@ def content():
         st.write(df)
 
         # Classer les utilisateurs selon Traveler et/ou Foody
-        instaClassifier = InstagramClassification(df, ['food', 'musician', 'travel'])
+        instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
         classification = instaClassifier.result()
         st.write(classification)
 

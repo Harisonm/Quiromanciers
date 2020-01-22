@@ -74,7 +74,7 @@ class InstagramClassification:
         by_user_by_location = pd.DataFrame(
             self.df_location.groupby(["User_Name"])["Location"].nunique()
         )
-        by_user_by_location["traveler"] = by_user_by_location.apply(
+        by_user_by_location["destinations10orMore"] = by_user_by_location.apply(
             self.is_traveler, axis=1
         )
         return by_user_by_location
@@ -159,8 +159,8 @@ class InstagramClassification:
         df = pd.DataFrame({
             'group': ['Labels'],
             'foody': [scores['food']],
-            'musician': [scores['musician']],
-            'travel': [scores['travel']],
+            'musician': [scores['music']],
+            'travel': [scores['mountain']],
         })
 
         categories = list(df)[1:]
