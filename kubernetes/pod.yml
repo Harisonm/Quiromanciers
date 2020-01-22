@@ -4,7 +4,7 @@ metadata:
   name: les-quiromanciers
 spec:
   containers:
-    - name: les-quiromanciers
+    - name: les-quiromanciersxxxxx
       image: gcr.io/neomail-258716/les-quiromanciers:latest
       volumeMounts:
         - mountPath: "/mnt/shared"
