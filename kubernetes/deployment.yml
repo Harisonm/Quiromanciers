@@ -7,7 +7,6 @@ spec:
   selector:
     matchLabels:
       app: les-quiromanciers
-      namespace: les-quiromanciers
   template:
     metadata:
       labels:
