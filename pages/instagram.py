@@ -19,16 +19,19 @@ def content():
             dt.datetime(2019, 8, 1),
             dt.datetime(2019, 12, 31),
         )
-        instaData.download_data()
-        df = instaData.dataframe_creation()
-        st.info("Voici à quoi ressemble les données extraites d\'Instagram !")
-        st.write(df)
+        try:
+            instaData.download_data()
+            df = instaData.dataframe_creation()
+            st.info("Voici à quoi ressemble les données extraites d\'Instagram !")
+            st.write(df)
 
-        # Classer les utilisateurs selon Traveler Foody Musician
-        instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
-        classification = instaClassifier.result()
-        st.info("On obtient ces scores générés à partir des données d\'Instagram")
-        st.write(classification)
+            # Classer les utilisateurs selon Traveler Foody Musician
+            instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
+            classification = instaClassifier.result()
+            st.info("On obtient ces scores générés à partir des données d\'Instagram")
+            st.write(classification)
 
-        st.info("Et ce graphique permettra à l'utilisateur de visualiser son profil instagrameur !")
-        instaClassifier.print_classification()
+            st.info("Et ce graphique permettra à l'utilisateur de visualiser son profil instagrameur !")
+            instaClassifier.print_classification()
+        except:
+            st.write('**Merci de rentrer un pseudo instagram qui existe !**')

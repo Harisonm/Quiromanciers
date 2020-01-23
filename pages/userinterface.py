@@ -7,14 +7,15 @@ import numpy as np
 import requests
 from io import BytesIO
 from PIL import Image
-#from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
+from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
 from lesQuiromanciers.factory.InstagramFactory import InstagramFactory
 from lesQuiromanciers.model.instagram.InstagramClassification import (
     InstagramClassification,
 )
 import datetime as dt
-#from lesQuiromanciers.factory.WikiFactory import WikiFactory
+from lesQuiromanciers.factory.WikiFactory import WikiFactory
 from streamlit.compatibility import setup_2_3_shims
+
 
 def content():
     st.sidebar.header("User Interface")
@@ -32,25 +33,29 @@ def content():
             dt.datetime(2019, 8, 1),
             dt.datetime(2019, 12, 31),
         )
-        instaData.download_data()
-        df = instaData.dataframe_creation()
+        try:
+            instaData.download_data()
+            df = instaData.dataframe_creation()
 
 
-        # Classer les utilisateurs selon Traveler et/ou Foody
-        instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
-        classification = instaClassifier.result()
+            # Classer les utilisateurs selon Traveler et/ou Foody
+            instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
+            classification = instaClassifier.result()
 
 
-        instaClassifier.print_classification()
+            instaClassifier.print_classification()
 
-        dict = {}
-        dict['foody'] = classification['food']
-        dict['musician'] = classification['music']
-        dict['traveler'] = classification['mountain']
+            dict = {}
+            dict['foody'] = classification['food']
+            dict['musician'] = classification['music']
+            dict['traveler'] = classification['mountain']
 
-        major_label = max(dict)
-        st.write('Congrats, you are ' + major_label)
-  
+            major_label = max(dict)
+            st.write('Congrats, you are ' + major_label)
+        except:
+            st.write('**Merci de rentrer un pseudo instagram qui existe !**')
+
+
 def bio_style(bio):
     bio = re.sub("=", "#", bio)
     return bio
