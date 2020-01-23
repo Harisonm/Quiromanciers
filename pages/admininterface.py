@@ -8,8 +8,8 @@ def content():
     st.sidebar.title("Admin Interface")
     st.sidebar.info("Ici tu peux entraîner les modèles en fonction d'une liste de nom dont on va aller chercher la biographie")
     name_list = pd.DataFrame({
-        'Label': ['Cooking Expert', 'Explorer', 'Musician'],
-        'Filename': ['cooking_expert.csv', 'explorer.csv', 'musician.csv']
+        'Label': ['Des biographies génériques'],
+        'Filename': ['people.csv']
     })
 
     st.write(name_list)
