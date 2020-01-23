@@ -17,7 +17,10 @@ import datetime as dt
 from streamlit.compatibility import setup_2_3_shims
 
 def content():
-    st.sidebar.title("User Interface")
+    st.sidebar.header("User Interface")
+    st.sidebar.info("Bienvenue sur l'application **Les Quiromanciers ** qui te permet de te générer une biographie \
+                    fictive en fonction de ton profil Instagram ! ")
+    st.sidebar.info("Rentre ton pseudo instagram et c'est parti !")
     pseudoIG = st.text_input(
         "Please enter your instagram pseudo. Example : guatemala_magica, jessieware, chef.etchebest, joshmeader22")
     classi = st.button("Generate")
