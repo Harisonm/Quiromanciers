@@ -6,7 +6,8 @@ image_python = Image.open('docs/logo/python3.png')
 image_openAI = Image.open('docs/logo/openAI.png')
 image_spacy = Image.open('docs/logo/spacy.png')
 def content():
-    st.sidebar.title("Technology Using")
+    st.sidebar.title("Technologies Used")
+    st.sidebar.info("Un tour d'horizon des technologies que nous avons utilisé pour développer ce projet.")
     st.markdown("Github : Git nous permet de stocker notre projet (repository) sur un serveur distant. \
                 Il nous a permis de travailler en collaboration en avançant plus rapidement sur nos tâches. \
                 Github intègre également des configurations pour avoir un workflow entre le repository et un serveur de production. \
