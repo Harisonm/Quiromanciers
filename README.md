@@ -60,5 +60,5 @@ To configure this workflow:
 ## Sequence Diagrams
 ![alt text](https://github.com/Harisonm/Quiromanciers/blob/md_modif/docs/Diagramme%20de%20Sequence%20avec%20Instagram%20(1).png "Generate biographie from instagram data")
 
-![alt text](https://github.com/Harisonm/Quiromanciers/blob/md_modif/docs/Diagramme%20de%20Sequence%20sans%20Instagram%20(1).png "Generate biographie from input text")
+![alt text](https://github.com/Harisonm/Quiromanciers/blob/md_modif/docs/Diagramme%20de%20Sequence%20sans%20instagram%20(1).png "Generate biographie from input text")
 
