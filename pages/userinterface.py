@@ -13,7 +13,7 @@ from lesQuiromanciers.model.instagram.InstagramClassification import (
     InstagramClassification,
 )
 import datetime as dt
-#from lesQuiromanciers.factory.WikiFactory import WikiFactory
+from lesQuiromanciers.factory.WikiFactory import WikiFactory
 from streamlit.compatibility import setup_2_3_shims
 
 def content():
