@@ -102,5 +102,8 @@ class InstagramFactory(object):
                                 caption.append(post["node"]["accessibility_caption"].replace('Image may contain: ', ''))
                             else:
                                 caption.append("")
+            user_name.append(user)
+            location.append(" ")
+            caption.append(" ")
         dataset = {"User_Name": user_name, "Location": location, "Caption": caption}
         return pd.DataFrame(dataset)
