@@ -1,10 +1,10 @@
 import streamlit as st
 from PIL import Image
 
-image_github = Image.open('docs/logo/github.png')
-image_python = Image.open('docs/logo/python3.png')
-image_openAI = Image.open('docs/logo/openAI.png')
-image_spacy = Image.open('docs/logo/spacy.png')
+#image_github = Image.open('docs/logo/github.png')
+#image_python = Image.open('docs/logo/python3.png')
+#image_openAI = Image.open('docs/logo/openAI.png')
+#image_spacy = Image.open('docs/logo/spacy.png')
 def content():
     st.sidebar.title("Technologies Used")
     st.sidebar.info("Un tour d'horizon des technologies que nous avons utilisé pour développer ce projet.")
@@ -52,5 +52,5 @@ def content():
                 données de différents compte instagram. \
                 Lien Instaloader : https://instaloader.github.io/")
     
-    st.image([image_github,image_openAI,image_spacy,image_python],width=100)
+    #st.image([image_github,image_openAI,image_spacy,image_python],width=100)
 
