@@ -20,7 +20,7 @@ def content():
     generate_data = st.button("Fetch Data From Wikipedia")
 
     file_name_source = str("data/" + name_list[name_list['Label'] == option]['Filename'].values[0])
-    file_name_destination = str("data/biographie" + option.replace("", "_") + ".txt")
+    file_name_destination = str("data/biographie" + option.replace(" ", "_") + ".txt")
     run_name = option.replace(" ", "_")
 
     if generate_data:
