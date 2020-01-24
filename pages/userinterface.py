@@ -76,6 +76,3 @@ def content():
         except:
             st.write("Write Instagram account existing")
             print_exc()
-
-
-
