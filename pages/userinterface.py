@@ -16,6 +16,7 @@ from lesQuiromanciers.model.instagram.InstagramClassification import (
 import datetime as dt
 from lesQuiromanciers.factory.WikiFactory import WikiFactory
 from streamlit.compatibility import setup_2_3_shims
+from streamlit import caching
 
 def content():
     st.sidebar.header("User Interface")
@@ -33,8 +34,9 @@ def content():
             dt.datetime(2019, 8, 1),
             dt.datetime(2019, 12, 31),
         )
-        
+    
         try:
+            
             instaData.download_data()
             df = instaData.dataframe_creation()
 
@@ -55,20 +57,18 @@ def content():
 
             name_list = pd.DataFrame({
                 'Label': ['foody', 'traveler', 'musician'],
-                'model_name': ['run1', 'Explorer', 'Musician']
+                'run_name': ['Cooking_Expert', 'Explorer', 'Musician']
             })
-            # Explorer Cooking_Expert
-            model_name = name_list[name_list['Label'] == major_label]['model_name'].values[0]
             
-            prefix = st.text_input("Write tailing about you to begin your biographie, example : Valentin was born in Madagascar. Valentin is " + major_label)
+            run_name = str(name_list[name_list['Label'] == major_label]['run_name'].values[0])
+            
+            prefix = st.text_input("Write tailing about you to begin your biographie, example : Valentin was born in Madagascar. Valentin is ")
             generate = st.button("Predict")
 
             if generate:
-                biographie = BiographieGenerator(model_name="124M", run_name=model_name, nsamples=1).generate_biographie(prefix=prefix)
+                biographie = BiographieGenerator(model_name="124M", run_name=run_name).generate_biographie(prefix=prefix,nsamples=1)
                 st.write(biographie)
-
+                
         except:
             st.write("Write Instagram account existing")
             print_exc()
-
-
