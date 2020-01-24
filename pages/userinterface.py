@@ -7,7 +7,8 @@ import numpy as np
 import requests
 from io import BytesIO
 from PIL import Image
-#from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
+from traceback import print_exc
+from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
 from lesQuiromanciers.factory.InstagramFactory import InstagramFactory
 from lesQuiromanciers.model.instagram.InstagramClassification import (
     InstagramClassification,
@@ -32,27 +33,42 @@ def content():
             dt.datetime(2019, 8, 1),
             dt.datetime(2019, 12, 31),
         )
-        instaData.download_data()
-        df = instaData.dataframe_creation()
+        
+        try:
+            instaData.download_data()
+            df = instaData.dataframe_creation()
+
+            # Classer les utilisateurs selon Traveler et/ou Foody
+            instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
+            classification = instaClassifier.result()
 
 
-        # Classer les utilisateurs selon Traveler et/ou Foody
-        instaClassifier = InstagramClassification(df, ['food', 'music', 'mountain'])
-        classification = instaClassifier.result()
+            instaClassifier.print_classification()
 
+            dict = {}
+            dict['foody'] = classification['food'].values[0]
+            dict['musician'] = classification['music'].values[0]
+            dict['traveler'] = classification['mountain'].values[0]
 
-        instaClassifier.print_classification()
+            major_label = max(dict, key=dict.get)
+            st.write('Congrats, you are ' + major_label)
 
-        dict = {}
-        dict['foody'] = classification['food']
-        dict['musician'] = classification['music']
-        dict['traveler'] = classification['mountain']
+            name_list = pd.DataFrame({
+                'Label': ['foody', 'traveler', 'musician'],
+                'model_name': ['run1', 'Explorer', 'Musician']
+            })
+            # Explorer Cooking_Expert
+            model_name = name_list[name_list['Label'] == major_label]['model_name'].values[0]
+            
+            prefix = st.text_input("Write tailing about you to begin your biographie, example : Valentin was born in Madagascar. Valentin is " + major_label)
+            generate = st.button("Predict")
 
-        major_label = max(dict)
-        st.write('Congrats, you are ' + major_label)
-  
-def bio_style(bio):
-    bio = re.sub("=", "#", bio)
-    return bio
+            if generate:
+                biographie = BiographieGenerator(model_name="124M", run_name=model_name, nsamples=1).generate_biographie(prefix=prefix)
+                st.write(biographie)
+
+        except:
+            st.write("Write Instagram account existing")
+            print_exc()
 
 

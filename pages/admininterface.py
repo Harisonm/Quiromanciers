@@ -8,7 +8,7 @@ def content():
     st.sidebar.title("Admin Interface")
     st.sidebar.info("Ici tu peux entraîner les modèles en fonction d'une liste de nom dont on va aller chercher la biographie")
     name_list = pd.DataFrame({
-        'Label': ['Des biographies génériques'],
+        'Label': ['Des biographies generiques'],
         'Filename': ['people.csv']
     })
 
@@ -38,5 +38,3 @@ def content():
     if generate:
         biographie = BiographieGenerator(model_name="124M", run_name=model_name).generate_biographie(prefix=prefix)
         st.write(biographie)
-        st.write("# " + name)
-        st.write(bio_style(str(biographie)))
