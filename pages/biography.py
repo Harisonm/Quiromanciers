@@ -21,7 +21,7 @@ def content():
 
     file_name_source = str("data/" + name_list[name_list['Label'] == option]['Filename'].values[0])
     file_name_destination = str("data/biographie" + option.replace("", "_") + ".txt")
-    model_name = option.replace(" ", "_")
+    run_name = option.replace(" ", "_")
 
     if generate_data:
         flag = WikiFactory().build_biographie(file_name_source, file_name_destination)
@@ -29,13 +29,12 @@ def content():
 
     traning = st.button("Fine Tune The Model")
     if traning:
-        BiographieGenerator(model_name="124M", run_name=model_name).prepare_fine_tuning(file_name_destination)
+        BiographieGenerator(model_name="124M", run_name=run_name).prepare_fine_tuning(file_name_destination)
 
-    name = st.text_input("Give your firstname folling your name, like example : Leonardo DICAPRIO")
     prefix = st.text_input("Write tailing about you to begin your biographie, example : Mani was born in Madagascar.")
 
     generate = st.button("Predict")
 
     if generate:
-        biographie = BiographieGenerator(model_name="124M", run_name=model_name, nsamples=1).generate_biographie(prefix=prefix)
+        biographie = BiographieGenerator(model_name="124M", run_name=run_name).generate_biographie(prefix=prefix,nsamples=1)
         st.write(biographie)
