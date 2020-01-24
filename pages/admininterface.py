@@ -8,7 +8,7 @@ def content():
     st.sidebar.title("Admin Interface")
     st.sidebar.info("Ici tu peux entraîner les modèles en fonction d'une liste de nom dont on va aller chercher la biographie")
     name_list = pd.DataFrame({
-        'Label': ['Des biographies génériques'],
+        'Label': ['Des biographies generiques'],
         'Filename': ['people.csv']
     })
 
@@ -30,3 +30,11 @@ def content():
     traning = st.button("Fine Tune The Model")
     if traning:
         BiographieGenerator(model_name="124M", run_name=model_name).prepare_fine_tuning(file_name_destination)
+    
+    name = st.text_input("Give your firstname folling your name, like example : Leonardo DICAPRIO")
+    prefix = st.text_input("Write tailing about you to begin your biographie, example : Mani was born in Madagascar.")
+    generate = st.button("Predict")
+    
+    if generate:
+        biographie = BiographieGenerator(model_name="124M", run_name=model_name).generate_biographie(prefix=prefix)
+        st.write(biographie)

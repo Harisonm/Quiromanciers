@@ -45,7 +45,7 @@ class BiographieGenerator:
             save_every=500,
         )
 
-    def generate_biographie(self, prefix: str):
+    def generate_biographie(self, prefix: str,nsamples : int = 5):
         """
         generate_biographie: 
         
@@ -65,6 +65,6 @@ class BiographieGenerator:
             temperature=0.7,
             prefix=prefix,
             return_as_list=True,
-            nsamples=5,
+            nsamples=nsamples,
             batch_size=5,
         )

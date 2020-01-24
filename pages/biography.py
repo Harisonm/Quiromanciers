@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from lesQuiromanciers.factory.WikiFactory import WikiFactory
 from lesQuiromanciers.model.gpt2.BiographieGenerator import BiographieGenerator
-import re
 
 
 def content():
@@ -21,7 +20,7 @@ def content():
     generate_data = st.button("Fetch Data From Wikipedia")
 
     file_name_source = str("data/" + name_list[name_list['Label'] == option]['Filename'].values[0])
-    file_name_destination = str("data/biographie" + option.replace(" ", "") + ".txt")
+    file_name_destination = str("data/biographie" + option.replace("", "_") + ".txt")
     model_name = option.replace(" ", "_")
 
     if generate_data:
@@ -38,12 +37,5 @@ def content():
     generate = st.button("Predict")
 
     if generate:
-        biographie = BiographieGenerator(model_name="124M", run_name=model_name).generate_biographie(prefix=prefix)
+        biographie = BiographieGenerator(model_name="124M", run_name=model_name, nsamples=1).generate_biographie(prefix=prefix)
         st.write(biographie)
-        st.write("# " + name)
-        st.write(bio_style(str(biographie)))
-
-
-def bio_style(bio):
-    bio = re.sub("=", "#", bio)
-    return bio
