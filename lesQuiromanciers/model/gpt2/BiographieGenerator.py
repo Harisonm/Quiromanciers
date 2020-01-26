@@ -62,6 +62,7 @@ class BiographieGenerator:
         return gpt2.generate(
             sess,
             length=250,
+            run_name=self.run_name,
             temperature=0.7,
             prefix=prefix,
             return_as_list=True,
