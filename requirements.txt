@@ -5,7 +5,7 @@ ftfy==5.6
 tqdm==4.32.1
 Click==7.0
 sentencepiece==0.1.83
-tensorflow-cpu==1.15.0
+tensorflow-cpu==2.3.1
 numpy==1.16.4
 streamlit
 gpt_2_simple
