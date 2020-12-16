@@ -13,6 +13,6 @@ spec:
     spec:
       containers:
         - name: les-quiromanciers
-          image: gcr.io/neomail-258716/les-quiromanciers:latest
+          image: gcr.io/formation-mac-298810/les-quiromanciers:latest
           ports:
             - containerPort: 8501
