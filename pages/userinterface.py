@@ -15,7 +15,6 @@ from lesQuiromanciers.model.instagram.InstagramClassification import (
 )
 import datetime as dt
 from lesQuiromanciers.factory.WikiFactory import WikiFactory
-from streamlit.compatibility import setup_2_3_shims
 from streamlit import caching
 
 def content():
