@@ -10,8 +10,8 @@ env:
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
   GITHUB_SHA: ${{ github.sha }}
-  GKE_ZONE: us-central1-b
-  GKE_CLUSTER: standard-cluster-1
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   IMAGE: les-quiromanciers
   GKE_KEY: ${{ secrets.GKE_KEY }}
 
